@@ -1,17 +1,21 @@
-name: Deploy
+deploy:
+  runs-on: self-hosted
 
-on:
-  push:
-    branches:
-      - master
+  steps:
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  - uses: actions/checkout@v4
 
-    steps:
+  - name: Publish
+    run: dotnet publish -c Release -o publish
 
-    - uses: actions/checkout@v4
+  - name: Stop IIS Site
+    run: |
+      powershell Stop-WebSite -Name "Registar Form"
 
-    - name: Deploy Message
-      run: echo "Application deployed successfully"
+  - name: Copy Files
+    run: |
+      xcopy publish C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form /E /Y
+
+  - name: Start IIS Site
+    run: |
+      powershell Start-WebSite -Name "Registar Form"
