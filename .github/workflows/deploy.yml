@@ -5,9 +5,7 @@ on:
 
 jobs:
   deploy:
-
     runs-on: self-hosted
-
     steps:
     - name: Download a Build Artifact      
       uses: actions/download-artifact@v4
