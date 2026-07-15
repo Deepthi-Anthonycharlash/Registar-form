@@ -17,4 +17,7 @@ jobs:
           name: website
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: publish      
+          path: publish            
+      - name: Copy to Deploy Folder
+        shell: powershell
+        run: Copy-Item "publish\*" "C:\Deepthi\Deploy" -Recurse -Force
