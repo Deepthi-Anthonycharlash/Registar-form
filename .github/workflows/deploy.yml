@@ -9,9 +9,9 @@ jobs:
     runs-on: self-hosted
 
     steps:
-     - name: Download Artifact
-      uses: actions/Download-artifact@v4
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.1.0
       with:
         name: website
-        path: publish
+      
 
