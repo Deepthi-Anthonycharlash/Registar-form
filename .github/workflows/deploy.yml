@@ -1,13 +1,21 @@
-name: Deploy
+name: CD
+
 on:
-  workflow_dispatch:
-  
+  workflow_run:
+    workflows:
+      - .NET
+    types:
+      - completed
+
 jobs:
   deploy:
-  
     runs-on: self-hosted
+
     steps:
-    - name: Download a Build Artifact      
-      uses: actions/download-artifact@v4
-     with:
-      name: website
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: publish
