@@ -18,4 +18,12 @@ jobs:
           name: website
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: publish
+          path: publish      
+      - name: Stop IIS
+        shell: powershell
+        run: |
+          iisreset /stop
+
+
+   
+
