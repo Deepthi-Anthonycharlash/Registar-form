@@ -17,5 +17,9 @@ jobs:
           name: website
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: publish
+          path: publish          
+      - name: Verify Download
+        run: |
+          ls -R publish
+
      
