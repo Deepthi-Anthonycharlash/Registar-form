@@ -1,35 +1,48 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: .NET Build and Deploy
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
-  build:
+  deploy:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
+
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
-      run: dotnet build --no-restore      
-    - name: Publish
-      run: dotnet publish ./Registar\ form.csproj -c Release -o publish      
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: website
-        path: publish
+      run: dotnet build --no-restore
+
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: dotnet publish -c Release -o publish
+
+    - name: Stop IIS Site
+      shell: powershell
+      run: |
+        Stop-WebSite -Name "Registar Form"
+
+    - name: Copy Files
+      shell: powershell
+      run: |
+        Copy-Item "publish\*" `
+        "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form" `
+        -Recurse -Force
+
+    - name: Start IIS Site
+      shell: powershell
+      run: |
+        Start-WebSite -Name "Registar Form"
