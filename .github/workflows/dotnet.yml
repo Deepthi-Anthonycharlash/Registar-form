@@ -28,5 +28,9 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish ./Registar\ form.csproj -c Release -o publish 
+    - name: Stop IIS Site
+      shell: powershell
+      run: |
+        Stop-WebSite -Name "Registar Form"
       
    
