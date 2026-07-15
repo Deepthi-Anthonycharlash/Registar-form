@@ -15,27 +15,3 @@ jobs:
       with:
         name: website
         path: deploy
-
-    - name: Check Downloaded Files
-      shell: pwsh
-      run: |
-        Get-ChildItem deploy -Recurse
-
-    - name: Stop IIS Site
-      shell: pwsh
-      run: |
-        Import-Module WebAdministration
-        Stop-WebSite -Name "Registar Form"
-
-    - name: Copy Files
-      shell: pwsh
-      run: |
-        Copy-Item "deploy\*" `
-        "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form" `
-        -Recurse -Force
-
-    - name: Start IIS Site
-      shell: pwsh
-      run: |
-        Import-Module WebAdministration
-        Start-WebSite -Name "Registar Form"
