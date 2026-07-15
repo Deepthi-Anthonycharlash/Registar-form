@@ -19,5 +19,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: publish            
       - name: Copy to Deploy Folder
-        shell: powershell
-        run: Copy-Item "publish\*" "C:\Deepthi\Deploy" -Recurse -Force
+        run: |
+         mkdir -p /tmp/Deepthi/Deploy
+         cp -r publish/* /tmp/Deepthi/Deploy/
