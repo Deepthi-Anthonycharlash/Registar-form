@@ -20,6 +20,14 @@ jobs:
           path: publish          
       - name: Verify Download
         run: |
-          ls -R publish
+          ls -R publish          
+      - name: Copy Files
+        run: |
+            mkdir -p /tmp/Deepthi/Deploy
+              cp -r publish/. /tmp/Deepthi/Deploy/
+      - name: Verify Deploy Folder
+        run: |
+          ls -R /tmp/Deepthi/Deploy
+
 
      
