@@ -26,5 +26,14 @@ jobs:
         run: |
           Import-Module WebAdministration
           Stop-Website -Name "Registar Form"
+      - name: Deploy Files
+        shell: powershell
+        run: |
+          Copy-Item "publish\*" "C:\inetpub\wwwroot\wss\Virtual Directories\Registar Form\" -Recurse -Force
+      - name: Start IIS Website
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          Start-Website -Name "Registar Form"
 
      
