@@ -1,0 +1,36 @@
+name: CD
+on:
+  workflow_run:
+    workflows:
+      - .NET
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: publish          
+      - name: Stop IIS Site
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          Stop-Website -Name "Registar Form"
+      - name: Deploy Files
+        shell: powershell
+        run: |
+          Copy-Item "publish\*" "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form\" -Recurse -Force
+      - name: Start IIS Website
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          Start-Website -Name "Registar Form"
+
+     
