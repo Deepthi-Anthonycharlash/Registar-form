@@ -29,7 +29,7 @@ jobs:
       - name: Deploy Files
         shell: powershell
         run: |
-          Copy-Item "publish\*" "C:\inetpub\wwwroot\wss\Virtual Directories\Registar Form\" -Recurse -Force
+          Copy-Item "publish\*" "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form\" -Recurse -Force
       - name: Start IIS Website
         shell: powershell
         run: |
