@@ -18,9 +18,6 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: publish          
-      - name: Verify Download
-        run: |
-          ls -R publish  
       - name: Stop IIS Site
         shell: powershell
         run: |
