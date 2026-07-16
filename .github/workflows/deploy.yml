@@ -22,7 +22,13 @@ jobs:
         shell: powershell
         run: |
           Import-Module WebAdministration
-          Stop-Website -Name "Registar Form"
+          Stop-Website -Name "Registar Form"          
+      - name: Clean Deployment Folder
+        shell: powershell
+        run: |
+              $path = "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form"
+              Get-ChildItem $path -Exclude web.config |
+              Remove-Item -Recurse -Force
       - name: Deploy Files
         shell: powershell
         run: |
