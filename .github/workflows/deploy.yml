@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Download Artifact
@@ -20,14 +20,11 @@ jobs:
           path: publish          
       - name: Verify Download
         run: |
-          ls -R publish          
-      - name: Copy Files
+          ls -R publish  
+      - name: Stop IIS Site
+        shell: powershell
         run: |
-            mkdir -p /tmp/Deepthi/Deploy
-              cp -r publish/. /tmp/Deepthi/Deploy/
-      - name: Verify Deploy Folder
-        run: |
-          ls -R /tmp/Deepthi/Deploy
-
+          Import-Module WebAdministration
+          Stop-Website -Name "Registar Form"
 
      
