@@ -1,4 +1,5 @@
 name: CD
+
 on:
   workflow_run:
     workflows:
@@ -17,26 +18,79 @@ jobs:
           name: website
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path: publish          
-      - name: Stop IIS Site
+          path: publish
+
+      - name: Stop IIS Website and Application Pool
         shell: powershell
         run: |
           Import-Module WebAdministration
-          Stop-Website -Name "Registar Form"          
+
+          # Stop Website if it is running
+          $website = Get-Website -Name "KendoSample77"
+          if ($website.State -eq "Started") {
+              Write-Host "Stopping Website..."
+              Stop-Website -Name "KendoSample77"
+          }
+          else {
+              Write-Host "Website is already stopped."
+          }
+
+          # Stop Application Pool if it is running
+          $appPool = Get-WebAppPoolState -Name "KendoSample77"
+          if ($appPool.Value -eq "Started") {
+              Write-Host "Stopping Application Pool..."
+              Stop-WebAppPool -Name "KendoSample77"
+          }
+          else {
+              Write-Host "Application Pool is already stopped."
+          }
+
       - name: Clean Deployment Folder
         shell: powershell
         run: |
-              $path = "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form"
+          $path = "C:\inetpub\wwwroot\wss\VirtualDirectories\KendoSampleProj"
+
+          if (Test-Path $path) {
               Get-ChildItem $path -Exclude web.config |
-              Remove-Item -Recurse -Force
+                  Remove-Item -Recurse -Force
+          }
+
       - name: Deploy Files
         shell: powershell
         run: |
-          Copy-Item "publish\*" "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form\" -Recurse -Force
-      - name: Start IIS Website
+          Copy-Item "publish\*" `
+            "C:\inetpub\wwwroot\wss\VirtualDirectories\KendoSampleProj\" `
+            -Recurse -Force
+
+      - name: Start IIS Website and Application Pool
         shell: powershell
         run: |
           Import-Module WebAdministration
-          Start-Website -Name "Registar Form"
 
-     
+          # Start Application Pool if it is stopped
+          $appPool = Get-WebAppPoolState -Name "KendoSample77"
+          if ($appPool.Value -eq "Stopped") {
+              Write-Host "Starting Application Pool..."
+              Start-WebAppPool -Name "KendoSample77"
+          }
+          else {
+              Write-Host "Application Pool is already running."
+          }
+
+          # Start Website if it is stopped
+          $website = Get-Website -Name "KendoSample77"
+          if ($website.State -eq "Stopped") {
+              Write-Host "Starting Website..."
+              Start-Website -Name "KendoSample77"
+          }
+          else {
+              Write-Host "Website is already running."
+          }
+
+      - name: Cleanup Downloaded Artifact
+        if: always()
+        shell: powershell
+        run: |
+          if (Test-Path "publish") {
+              Remove-Item "publish" -Recurse -Force
+          }
