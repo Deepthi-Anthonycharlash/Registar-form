@@ -26,20 +26,20 @@ jobs:
           Import-Module WebAdministration
 
           # Stop Website if it is running
-          $website = Get-Website -Name "KendoSample77"
+          $website = Get-Website -Name "Registar Form"
           if ($website.State -eq "Started") {
               Write-Host "Stopping Website..."
-              Stop-Website -Name "KendoSample77"
+              Stop-Website -Name "Registar Form"
           }
           else {
               Write-Host "Website is already stopped."
           }
 
           # Stop Application Pool if it is running
-          $appPool = Get-WebAppPoolState -Name "KendoSample77"
+          $appPool = Get-WebAppPoolState -Name "Registar Form"
           if ($appPool.Value -eq "Started") {
               Write-Host "Stopping Application Pool..."
-              Stop-WebAppPool -Name "KendoSample77"
+              Stop-WebAppPool -Name "Registar Form"
           }
           else {
               Write-Host "Application Pool is already stopped."
@@ -48,7 +48,7 @@ jobs:
       - name: Clean Deployment Folder
         shell: powershell
         run: |
-          $path = "C:\inetpub\wwwroot\wss\VirtualDirectories\KendoSampleProj"
+          $path = "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form"
 
           if (Test-Path $path) {
               Get-ChildItem $path -Exclude web.config |
@@ -59,7 +59,7 @@ jobs:
         shell: powershell
         run: |
           Copy-Item "publish\*" `
-            "C:\inetpub\wwwroot\wss\VirtualDirectories\KendoSampleProj\" `
+            "C:\inetpub\wwwroot\wss\VirtualDirectories\Registar Form\" `
             -Recurse -Force
 
       - name: Start IIS Website and Application Pool
@@ -68,20 +68,20 @@ jobs:
           Import-Module WebAdministration
 
           # Start Application Pool if it is stopped
-          $appPool = Get-WebAppPoolState -Name "KendoSample77"
+          $appPool = Get-WebAppPoolState -Name "Registar Form"
           if ($appPool.Value -eq "Stopped") {
               Write-Host "Starting Application Pool..."
-              Start-WebAppPool -Name "KendoSample77"
+              Start-WebAppPool -Name "Registar Form"
           }
           else {
               Write-Host "Application Pool is already running."
           }
 
           # Start Website if it is stopped
-          $website = Get-Website -Name "KendoSample77"
+          $website = Get-Website -Name "Registar Form"
           if ($website.State -eq "Stopped") {
               Write-Host "Starting Website..."
-              Start-Website -Name "KendoSample77"
+              Start-Website -Name "Registar Form"
           }
           else {
               Write-Host "Website is already running."
